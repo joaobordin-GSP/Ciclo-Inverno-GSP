@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSP — Ciclo de Inverno 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);--text:#e8eaf0;--text2:#8890a8;--text3:#555f7a;--accent:#4f8ef7;--green:#34d399;--red:#f87171;--amber:#fbbf24;--teal:#2dd4bf;--purple:#a78bfa;--coral:#fb923c;--radius:12px;--rsm:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;}
+.topnav{position:sticky;top:0;z-index:100;background:rgba(15,17,23,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;height:52px;overflow-x:auto;gap:0;}
+.brand{font-size:13px;font-weight:600;letter-spacing:.08em;color:var(--amber);font-family:'DM Mono',monospace;white-space:nowrap;margin-right:20px;}
+.nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;padding:0 11px;height:52px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;}
+.nav-btn:hover{color:var(--text);}.nav-btn.active{color:var(--amber);border-bottom-color:var(--amber);}
+.page{display:none;padding:28px 24px 60px;max-width:1300px;margin:0 auto;}.page.active{display:block;}
+.page-header{margin-bottom:24px;}.page-header h1{font-size:22px;font-weight:600;}.page-header p{font-size:13px;color:var(--text2);margin-top:3px;}
+.badge{display:inline-block;font-size:11px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;background:rgba(251,191,36,.15);color:var(--amber);}
+.badge-blue{background:rgba(79,142,247,.15);color:var(--accent);}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:11px;margin-bottom:20px;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 17px;}
+.metric-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;}
+.metric-value{font-size:23px;font-weight:600;line-height:1;}
+.metric-sub{font-size:12px;margin-top:4px;}
+.pos{color:var(--green);}.neg{color:var(--red);}.neu{color:var(--text2);}
+.ml-accent{border-left:3px solid var(--accent);}.ml-green{border-left:3px solid var(--green);}
+.ml-red{border-left:3px solid var(--red);}.ml-amber{border-left:3px solid var(--amber);}
+.ml-teal{border-left:3px solid var(--teal);}.ml-purple{border-left:3px solid var(--purple);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin-bottom:15px;}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
+.card-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:13px;}
+.rank-table{width:100%;border-collapse:collapse;}
+.rank-table th{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;padding:8px 9px;text-align:left;border-bottom:1px solid var(--border);}
+.rank-table td{padding:9px 9px;border-bottom:1px solid var(--border);font-size:13px;}
+.rank-table tr:last-child td{border-bottom:none;}.rank-table tr:hover td{background:rgba(255,255,255,.02);}
+.num{font-family:'DM Mono',monospace;font-size:12px;}
+.nivel-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.nivel-label{font-size:12px;font-family:'DM Mono',monospace;color:var(--text2);width:28px;}
+.nivel-bar-bg{flex:1;background:rgba(255,255,255,.06);border-radius:3px;height:8px;}
+.nivel-bar-fill{height:8px;border-radius:3px;}
+.nivel-val{font-size:12px;font-family:'DM Mono',monospace;color:var(--text);min-width:36px;text-align:right;}
+.insight{border-radius:var(--rsm);padding:13px 15px;font-size:13px;color:var(--text2);margin-top:11px;line-height:1.75;background:rgba(79,142,247,.07);border:1px solid rgba(79,142,247,.2);}
+.insight.warn{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.2);}
+.insight.danger{background:rgba(248,113,113,.07);border-color:rgba(248,113,113,.2);}
+.insight.good{background:rgba(52,211,153,.07);border-color:rgba(52,211,153,.2);}
+.insight strong{color:var(--text);font-weight:500;}
+.section-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin:24px 0 11px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.back-btn{background:none;border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;padding:6px 14px;cursor:pointer;margin-bottom:18px;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
+.back-btn:hover{color:var(--text);border-color:var(--amber);}
+.filter-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;align-items:center;}
+.filter-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-right:4px;}
+.fbtn{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;padding:4px 10px;cursor:pointer;transition:all .15s;}
+.fbtn:hover{color:var(--text);}.fbtn.active{background:rgba(251,191,36,.15);color:var(--amber);border-color:rgba(251,191,36,.4);}
+.yoy-pos{color:var(--green);font-size:12px;font-family:'DM Mono',monospace;}
+.yoy-neg{color:var(--red);font-size:12px;font-family:'DM Mono',monospace;}
+::-webkit-scrollbar{width:6px;height:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <span class="brand">GSP · Inverno 2026</span>
+  <button class="nav-btn active" onclick="showPage('gsp')">Consolidado GSP</button>
+  <button class="nav-btn" onclick="showEscola('Santo Anjo')">Santo Anjo</button>
+  <button class="nav-btn" onclick="showEscola('CCPA')">CCPA</button>
+  <button class="nav-btn" onclick="showEscola('CJA')">CJA</button>
+  <button class="nav-btn" onclick="showEscola('Marupiara')">Marupiara</button>
+  <button class="nav-btn" onclick="showEscola('Aquarius')">Aquarius</button>
+  <button class="nav-btn" onclick="showEscola('Conselheiro')">Conselheiro</button>
+  <button class="nav-btn" onclick="showEscola('Embaré')">Embaré</button>
+  <button class="nav-btn" onclick="showEscola('Guarujá')">Guarujá</button>
+  <button class="nav-btn" onclick="showEscola('Ponta da Praia')">Ponta da Praia</button>
+  <button class="nav-btn" onclick="showEscola('São Vicente')">São Vicente</button>
+  <button class="nav-btn" onclick="showEscola('Praia Grande')">Praia Grande</button>
+</nav>
+
+<!-- GSP -->
+<div class="page active" id="page-gsp">
+  <div class="page-header">
+    <h1>Ciclo de Inverno 2026 <span class="badge">01/03 → 31/12/2026</span> <span class="badge badge-blue">Apenas Matrícula Nova</span></h1>
+    <p>11 unidades · Captação a partir de 01/03/2026 · YoY comparado ao Ciclo de Inverno 2025 · Bolsistas 100% excluídos</p>
+  </div>
+
+  <div class="metrics">
+    <div class="metric ml-amber"><div class="metric-label">Matrículas Novas</div><div class="metric-value">228</div><div class="metric-sub pos">▲ +26% vs 2025 (181)</div></div>
+    <div class="metric ml-accent"><div class="metric-label">Receita Total</div><div class="metric-value">R$ 4,1M</div><div class="metric-sub neu">acumulado até Jun/26</div></div>
+    <div class="metric ml-accent"><div class="metric-label">Receita SE</div><div class="metric-value">R$ 3,3M</div><div class="metric-sub neu">80,5% da receita</div></div>
+    <div class="metric ml-purple"><div class="metric-label">Material Didático</div><div class="metric-value">R$ 472K</div><div class="metric-sub neu">11,6% da receita</div></div>
+    <div class="metric ml-teal"><div class="metric-label">Contraturno</div><div class="metric-value">R$ 193K</div><div class="metric-sub neu">4,8% da receita</div></div>
+    <div class="metric ml-green"><div class="metric-label">Ticket Médio</div><div class="metric-value">R$ 3,0K</div><div class="metric-sub neu">rec. total / alunos / 6</div></div>
+    <div class="metric ml-teal"><div class="metric-label">Mensalidade Média</div><div class="metric-value">R$ 2,4K</div><div class="metric-sub neu">rec. SE / alunos / 6</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:15px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+      <span class="card-title" style="margin:0">Captação acumulada — 2026 vs 2025 YoY</span>
+      <div class="filter-row" style="margin:0">
+        <span class="filter-label">Até:</span>
+        <div id="filtroMesGSP"></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;" id="metricsAcumGSP"></div>
+    <div style="position:relative;height:260px"><canvas id="chartAcumGSP"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:15px">
+    <span class="card-title">Captação mensal — 2026 vs 2025 YoY</span>
+    <div style="position:relative;height:220px"><canvas id="chartMensalGSP"></canvas></div>
+  </div>
+
+  <!-- Realizado vs Meta -->
+  <div class="card" style="margin-bottom:15px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+      <span class="card-title" style="margin:0">Realizado vs Meta — acumulado</span>
+      <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--text2);">
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:rgba(251,191,36,.7);border-radius:2px;display:inline-block"></span>Realizado 2026</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:22px;height:2px;background:rgba(255,255,255,.5);display:inline-block;border-top:2px dashed rgba(255,255,255,.5)"></span>Meta</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;" id="metricsMetaGSP"></div>
+    <div style="position:relative;height:240px"><canvas id="chartMetaGSP"></canvas></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Receita acumulada por produto</div>
+      <div class="filter-row" id="filtroProdGSP"></div>
+      <div style="position:relative;height:200px"><canvas id="chartRecGSP"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Captação por segmento — 2026 vs 2025</div>
+      <div style="position:relative;height:200px"><canvas id="chartNivelGSP"></canvas></div>
+    </div>
+  </div>
+
+  <p class="section-title">Ranking por escola — Captação 2026 vs YoY 2025</p>
+  <div class="card" style="overflow-x:auto">
+    <table class="rank-table" id="rankTableGSP"></table>
+  </div>
+
+  <div id="insightsGSP">
+    <div class="insight good" style="margin-top:14px"><strong>✅ Crescimento YoY consistente:</strong> 228 matrículas novas em 2026 (excluindo 17 bolsistas 100% — 12 confirmados + 5 temporários) contra 181 no mesmo período de 2025 — <strong>+26% YoY</strong>. Receita acumulada de R$ 4,1M. Janela: 01/03 → 15/06 de cada ano.</div>
+    <div class="insight good" style="margin-top:10px"><strong>🏆 Destaques do ciclo:</strong> Ponta da Praia lidera com <strong>+111% YoY</strong> e <strong>100% da meta</strong> já atingida (19/19) — maior receita entre as escolas médias (R$ 459K). Embaré também em <strong>100% da meta</strong> (15/15). São Vicente (+73% YoY, 112% da meta) e Praia Grande (+73% YoY, 104% da meta, 26 alunos — maior volume absoluto) seguem acima do esperado.</div>
+    <div class="insight warn" style="margin-top:10px"><strong>⚠ Meta acumulada Jun/26:</strong> 228 realizados vs 278 previstos — <strong>82%</strong> da meta GSP. Acima ou na meta: Conselheiro (120%), São Vicente (112%), Praia Grande (104%), Ponta da Praia (100%), Embaré (100%). Próxima de bater: Marupiara (85%).</div>
+    <div class="insight danger" style="margin-top:10px"><strong>🔴 Pontos de atenção:</strong> Aquarius é o caso mais crítico — <strong>-44% YoY</strong> (10 vs 18 em 2025) e apenas <strong>40% da meta</strong> (10/25), maior queda do ciclo. CCPA também abaixo (44% da meta). Santo Anjo, com +8% YoY, está em apenas <strong>73% da meta</strong> — gap de 29 alunos é o maior em termos absolutos (80/109), agravado pela retirada temporária de 2 bolsistas desta unidade.</div>
+    <div class="insight" style="margin-top:10px"><strong>📅 Próximos meses decisivos:</strong> Em 2025, jul/ago concentraram 47% da captação anual (251 de 506 alunos). Em 2026 estão previstos 340 alunos nesses dois meses — o resultado final do ciclo depende desse período.</div>
+  </div>
+</div>
+
+<!-- ESCOLA -->
+<div class="page" id="page-escola">
+  <div id="escolaContent"></div>
+</div>
+
+<script>
+const NIVEL_CLR={EI:'#4f8ef7',EF1:'#34d399',EF2:'#fbbf24',EM:'#f472b6'};
+const SRV_LBL={SE:'Serv. Educacional',MD:'Material Didático',CT:'Contraturno',AE:'Ativ. Extra',EC:'English Class',OT:'Outras',TOTAL:'Total'};
+const SRV_CLR={SE:'#4f8ef7',MD:'#a78bfa',CT:'#2dd4bf',AE:'#34d399',EC:'#fbbf24',OT:'#fb923c',TOTAL:'#fbbf24'};
+const CDO={backgroundColor:'#1e2335',titleColor:'#e8eaf0',bodyColor:'#8890a8',borderColor:'rgba(255,255,255,.1)',borderWidth:1};
+const GC='rgba(255,255,255,.04)',TC='#555f7a';
+const ESCOLAS=["Santo Anjo", "CCPA", "CJA", "Marupiara", "Aquarius", "Conselheiro", "Embaré", "Guarujá", "Ponta da Praia", "São Vicente", "Praia Grande"];
+const MESES26=["2026-03", "2026-04", "2026-05", "2026-06"];
+const MESES25=["2025-03", "2025-04", "2025-05", "2025-06"];
+const MESES26_LBL={'2026-03':'Mar/26','2026-04':'Abr/26','2026-05':'Mai/26','2026-06':'Jun/26'};
+const MESES25_LBL={'2025-03':'Mar/25','2025-04':'Abr/25','2025-05':'Mai/25','2025-06':'Jun/25'};
+const SRVS=['SE','MD','CT','AE','EC','OT'];
+
+const AL26={"Santo Anjo": {"2026-03": {"acum": 30, "mensal": 30}, "2026-04": {"acum": 49, "mensal": 19}, "2026-05": {"acum": 72, "mensal": 23}, "2026-06": {"acum": 80, "mensal": 8}}, "CCPA": {"2026-03": {"acum": 3, "mensal": 3}, "2026-04": {"acum": 5, "mensal": 2}, "2026-05": {"acum": 8, "mensal": 3}, "2026-06": {"acum": 8, "mensal": 0}}, "CJA": {"2026-03": {"acum": 8, "mensal": 8}, "2026-04": {"acum": 14, "mensal": 6}, "2026-05": {"acum": 18, "mensal": 4}, "2026-06": {"acum": 18, "mensal": 0}}, "Marupiara": {"2026-03": {"acum": 3, "mensal": 3}, "2026-04": {"acum": 6, "mensal": 4}, "2026-05": {"acum": 11, "mensal": 5}, "2026-06": {"acum": 11, "mensal": 0}}, "Aquarius": {"2026-03": {"acum": 1, "mensal": 1}, "2026-04": {"acum": 7, "mensal": 6}, "2026-05": {"acum": 10, "mensal": 3}, "2026-06": {"acum": 10, "mensal": 0}}, "Conselheiro": {"2026-03": {"acum": 1, "mensal": 1}, "2026-04": {"acum": 3, "mensal": 2}, "2026-05": {"acum": 5, "mensal": 2}, "2026-06": {"acum": 6, "mensal": 1}}, "Embaré": {"2026-03": {"acum": 5, "mensal": 5}, "2026-04": {"acum": 6, "mensal": 2}, "2026-05": {"acum": 14, "mensal": 8}, "2026-06": {"acum": 15, "mensal": 1}}, "Guarujá": {"2026-03": {"acum": 8, "mensal": 8}, "2026-04": {"acum": 10, "mensal": 2}, "2026-05": {"acum": 16, "mensal": 6}, "2026-06": {"acum": 16, "mensal": 0}}, "Ponta da Praia": {"2026-03": {"acum": 11, "mensal": 11}, "2026-04": {"acum": 14, "mensal": 3}, "2026-05": {"acum": 19, "mensal": 5}, "2026-06": {"acum": 19, "mensal": 0}}, "São Vicente": {"2026-03": {"acum": 4, "mensal": 4}, "2026-04": {"acum": 9, "mensal": 5}, "2026-05": {"acum": 16, "mensal": 7}, "2026-06": {"acum": 19, "mensal": 3}}, "Praia Grande": {"2026-03": {"acum": 6, "mensal": 6}, "2026-04": {"acum": 16, "mensal": 10}, "2026-05": {"acum": 25, "mensal": 9}, "2026-06": {"acum": 26, "mensal": 1}}, "GSP": {"2026-03": {"acum": 82, "mensal": 82}, "2026-04": {"acum": 141, "mensal": 62}, "2026-05": {"acum": 217, "mensal": 77}, "2026-06": {"acum": 228, "mensal": 14}}};
+const AL25={"Santo Anjo": {"2025-03": {"acum": 21, "mensal": 21}, "2025-04": {"acum": 40, "mensal": 19}, "2025-05": {"acum": 61, "mensal": 21}, "2025-06": {"acum": 74, "mensal": 13}}, "CCPA": {"2025-03": {"acum": 3, "mensal": 3}, "2025-04": {"acum": 7, "mensal": 4}, "2025-05": {"acum": 7, "mensal": 0}, "2025-06": {"acum": 7, "mensal": 0}}, "CJA": {"2025-03": {"acum": 5, "mensal": 5}, "2025-04": {"acum": 7, "mensal": 2}, "2025-05": {"acum": 9, "mensal": 2}, "2025-06": {"acum": 12, "mensal": 3}}, "Marupiara": {"2025-03": {"acum": 3, "mensal": 3}, "2025-04": {"acum": 6, "mensal": 3}, "2025-05": {"acum": 7, "mensal": 1}, "2025-06": {"acum": 8, "mensal": 1}}, "Aquarius": {"2025-03": {"acum": 6, "mensal": 6}, "2025-04": {"acum": 14, "mensal": 8}, "2025-05": {"acum": 18, "mensal": 4}, "2025-06": {"acum": 18, "mensal": 0}}, "Conselheiro": {"2025-03": {"acum": 1, "mensal": 1}, "2025-04": {"acum": 2, "mensal": 1}, "2025-05": {"acum": 4, "mensal": 2}, "2025-06": {"acum": 4, "mensal": 0}}, "Embaré": {"2025-03": {"acum": 5, "mensal": 5}, "2025-04": {"acum": 11, "mensal": 6}, "2025-05": {"acum": 14, "mensal": 3}, "2025-06": {"acum": 14, "mensal": 0}}, "Guarujá": {"2025-03": {"acum": 0, "mensal": 0}, "2025-04": {"acum": 4, "mensal": 4}, "2025-05": {"acum": 9, "mensal": 5}, "2025-06": {"acum": 9, "mensal": 0}}, "Ponta da Praia": {"2025-03": {"acum": 3, "mensal": 3}, "2025-04": {"acum": 6, "mensal": 3}, "2025-05": {"acum": 9, "mensal": 3}, "2025-06": {"acum": 9, "mensal": 0}}, "São Vicente": {"2025-03": {"acum": 8, "mensal": 8}, "2025-04": {"acum": 9, "mensal": 1}, "2025-05": {"acum": 11, "mensal": 2}, "2025-06": {"acum": 11, "mensal": 0}}, "Praia Grande": {"2025-03": {"acum": 4, "mensal": 4}, "2025-04": {"acum": 12, "mensal": 8}, "2025-05": {"acum": 15, "mensal": 3}, "2025-06": {"acum": 15, "mensal": 0}}, "GSP": {"2025-03": {"acum": 59, "mensal": 59}, "2025-04": {"acum": 118, "mensal": 59}, "2025-05": {"acum": 164, "mensal": 46}, "2025-06": {"acum": 181, "mensal": 17}}};
+const REC26={"Santo Anjo": {"2026-03": {"acum": {"SE": 481052, "MD": 39817, "CT": 65995, "AE": 0, "EC": 0, "OT": 6647, "TOTAL": 593512}, "mensal": {"SE": 481052, "MD": 39817, "CT": 65995, "AE": 0, "EC": 0, "OT": 6647, "TOTAL": 593512}}, "2026-04": {"acum": {"SE": 745515, "MD": 68414, "CT": 101681, "AE": 0, "EC": 0, "OT": 10590, "TOTAL": 926200}, "mensal": {"SE": 264463, "MD": 28596, "CT": 35686, "AE": 0, "EC": 0, "OT": 3943, "TOTAL": 332688}}, "2026-05": {"acum": {"SE": 1054808, "MD": 86068, "CT": 156257, "AE": 0, "EC": 0, "OT": 13373, "TOTAL": 1310506}, "mensal": {"SE": 309293, "MD": 17654, "CT": 54576, "AE": 0, "EC": 0, "OT": 2783, "TOTAL": 384306}}, "2026-06": {"acum": {"SE": 1140442, "MD": 96129, "CT": 179061, "AE": 0, "EC": 0, "OT": 27796, "TOTAL": 1443428}, "mensal": {"SE": 85635, "MD": 10061, "CT": 22804, "AE": 0, "EC": 0, "OT": 14423, "TOTAL": 132922}}}, "CCPA": {"2026-03": {"acum": {"SE": 46021, "MD": 2587, "CT": 8694, "AE": 0, "EC": 0, "OT": 520, "TOTAL": 57822}, "mensal": {"SE": 46021, "MD": 2587, "CT": 8694, "AE": 0, "EC": 0, "OT": 520, "TOTAL": 57822}}, "2026-04": {"acum": {"SE": 73856, "MD": 5977, "CT": 8694, "AE": 0, "EC": 0, "OT": 570, "TOTAL": 89097}, "mensal": {"SE": 27835, "MD": 3390, "CT": 0, "AE": 0, "EC": 0, "OT": 50, "TOTAL": 31274}}, "2026-05": {"acum": {"SE": 123264, "MD": 10832, "CT": 8694, "AE": 0, "EC": 0, "OT": 620, "TOTAL": 143410}, "mensal": {"SE": 49408, "MD": 4856, "CT": 0, "AE": 0, "EC": 0, "OT": 50, "TOTAL": 54314}}, "2026-06": {"acum": {"SE": 123264, "MD": 10832, "CT": 8694, "AE": 0, "EC": 0, "OT": 620, "TOTAL": 143410}, "mensal": {"SE": 0, "MD": 0, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 0}}}, "CJA": {"2026-03": {"acum": {"SE": 126872, "MD": 6737, "CT": 0, "AE": 0, "EC": 0, "OT": 16991, "TOTAL": 150600}, "mensal": {"SE": 126872, "MD": 6737, "CT": 0, "AE": 0, "EC": 0, "OT": 16991, "TOTAL": 150600}}, "2026-04": {"acum": {"SE": 207615, "MD": 9353, "CT": 0, "AE": 0, "EC": 0, "OT": 16991, "TOTAL": 233959}, "mensal": {"SE": 80743, "MD": 2616, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 83359}}, "2026-05": {"acum": {"SE": 266488, "MD": 12100, "CT": 0, "AE": 0, "EC": 0, "OT": 16991, "TOTAL": 295579}, "mensal": {"SE": 58873, "MD": 2747, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 61620}}, "2026-06": {"acum": {"SE": 266488, "MD": 12100, "CT": 0, "AE": 0, "EC": 0, "OT": 16991, "TOTAL": 295579}, "mensal": {"SE": 0, "MD": 0, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 0}}}, "Marupiara": {"2026-03": {"acum": {"SE": 37317, "MD": 2782, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 40099}, "mensal": {"SE": 37317, "MD": 2782, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 40099}}, "2026-04": {"acum": {"SE": 101830, "MD": 5960, "CT": 0, "AE": 0, "EC": 0, "OT": 290, "TOTAL": 108080}, "mensal": {"SE": 64513, "MD": 3178, "CT": 0, "AE": 0, "EC": 0, "OT": 290, "TOTAL": 67981}}, "2026-05": {"acum": {"SE": 170812, "MD": 9256, "CT": 0, "AE": 0, "EC": 0, "OT": 290, "TOTAL": 180357}, "mensal": {"SE": 68982, "MD": 3296, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 72277}}, "2026-06": {"acum": {"SE": 170812, "MD": 9256, "CT": 0, "AE": 0, "EC": 0, "OT": 290, "TOTAL": 180357}, "mensal": {"SE": 0, "MD": 0, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 0}}}, "Aquarius": {"2026-03": {"acum": {"SE": 17707, "MD": 4476, "CT": 0, "AE": 0, "EC": 0, "OT": 11270, "TOTAL": 33453}, "mensal": {"SE": 17707, "MD": 4476, "CT": 0, "AE": 0, "EC": 0, "OT": 11270, "TOTAL": 33453}}, "2026-04": {"acum": {"SE": 153856, "MD": 25563, "CT": 0, "AE": 0, "EC": 0, "OT": 11270, "TOTAL": 190688}, "mensal": {"SE": 136149, "MD": 21087, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 157236}}, "2026-05": {"acum": {"SE": 208161, "MD": 37953, "CT": 0, "AE": 0, "EC": 0, "OT": 11350, "TOTAL": 257463}, "mensal": {"SE": 54305, "MD": 12390, "CT": 0, "AE": 0, "EC": 0, "OT": 80, "TOTAL": 66775}}, "2026-06": {"acum": {"SE": 208161, "MD": 37953, "CT": 0, "AE": 0, "EC": 0, "OT": 11350, "TOTAL": 257463}, "mensal": {"SE": 0, "MD": 0, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 0}}}, "Conselheiro": {"2026-03": {"acum": {"SE": 22135, "MD": 7872, "CT": 0, "AE": 0, "EC": 0, "OT": 4928, "TOTAL": 34936}, "mensal": {"SE": 22135, "MD": 7872, "CT": 0, "AE": 0, "EC": 0, "OT": 4928, "TOTAL": 34936}}, "2026-04": {"acum": {"SE": 73409, "MD": 14748, "CT": 0, "AE": 0, "EC": 0, "OT": 4928, "TOTAL": 93086}, "mensal": {"SE": 51274, "MD": 6876, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 58150}}, "2026-05": {"acum": {"SE": 108995, "MD": 21624, "CT": 0, "AE": 0, "EC": 0, "OT": 4978, "TOTAL": 135597}, "mensal": {"SE": 35586, "MD": 6876, "CT": 0, "AE": 0, "EC": 0, "OT": 50, "TOTAL": 42512}}, "2026-06": {"acum": {"SE": 120713, "MD": 24079, "CT": 0, "AE": 0, "EC": 0, "OT": 4978, "TOTAL": 149770}, "mensal": {"SE": 11718, "MD": 2455, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 14173}}}, "Embaré": {"2026-03": {"acum": {"SE": 60164, "MD": 13224, "CT": 0, "AE": 0, "EC": 0, "OT": 668, "TOTAL": 74057}, "mensal": {"SE": 60164, "MD": 13224, "CT": 0, "AE": 0, "EC": 0, "OT": 668, "TOTAL": 74057}}, "2026-04": {"acum": {"SE": 79603, "MD": 19020, "CT": 0, "AE": 0, "EC": 0, "OT": 6549, "TOTAL": 105172}, "mensal": {"SE": 19439, "MD": 5796, "CT": 0, "AE": 0, "EC": 0, "OT": 5881, "TOTAL": 31115}}, "2026-05": {"acum": {"SE": 175980, "MD": 43986, "CT": 0, "AE": 0, "EC": 0, "OT": 6768, "TOTAL": 226734}, "mensal": {"SE": 96377, "MD": 24966, "CT": 0, "AE": 0, "EC": 0, "OT": 219, "TOTAL": 121562}}, "2026-06": {"acum": {"SE": 177628, "MD": 44469, "CT": 0, "AE": 0, "EC": 0, "OT": 6768, "TOTAL": 228865}, "mensal": {"SE": 1648, "MD": 483, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 2131}}}, "Guarujá": {"2026-03": {"acum": {"SE": 100373, "MD": 23062, "CT": 0, "AE": 0, "EC": 0, "OT": 466, "TOTAL": 123901}, "mensal": {"SE": 100373, "MD": 23062, "CT": 0, "AE": 0, "EC": 0, "OT": 466, "TOTAL": 123901}}, "2026-04": {"acum": {"SE": 125705, "MD": 29432, "CT": 0, "AE": 0, "EC": 0, "OT": 466, "TOTAL": 155603}, "mensal": {"SE": 25332, "MD": 6370, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 31702}}, "2026-05": {"acum": {"SE": 201795, "MD": 53882, "CT": 0, "AE": 0, "EC": 0, "OT": 556, "TOTAL": 256232}, "mensal": {"SE": 76090, "MD": 24450, "CT": 0, "AE": 0, "EC": 0, "OT": 90, "TOTAL": 100630}}, "2026-06": {"acum": {"SE": 201795, "MD": 53882, "CT": 0, "AE": 0, "EC": 0, "OT": 556, "TOTAL": 256232}, "mensal": {"SE": 0, "MD": 0, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 0}}}, "Ponta da Praia": {"2026-03": {"acum": {"SE": 242614, "MD": 44880, "CT": 0, "AE": 0, "EC": 0, "OT": 584, "TOTAL": 288079}, "mensal": {"SE": 242614, "MD": 44880, "CT": 0, "AE": 0, "EC": 0, "OT": 584, "TOTAL": 288079}}, "2026-04": {"acum": {"SE": 284437, "MD": 55110, "CT": 0, "AE": 0, "EC": 0, "OT": 11063, "TOTAL": 350610}, "mensal": {"SE": 41823, "MD": 10230, "CT": 0, "AE": 0, "EC": 0, "OT": 10478, "TOTAL": 62531}}, "2026-05": {"acum": {"SE": 366025, "MD": 71796, "CT": 0, "AE": 0, "EC": 0, "OT": 21433, "TOTAL": 459254}, "mensal": {"SE": 81588, "MD": 16686, "CT": 0, "AE": 0, "EC": 0, "OT": 10370, "TOTAL": 108644}}, "2026-06": {"acum": {"SE": 366025, "MD": 71796, "CT": 0, "AE": 0, "EC": 0, "OT": 21433, "TOTAL": 459254}, "mensal": {"SE": 0, "MD": 0, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 0}}}, "São Vicente": {"2026-03": {"acum": {"SE": 42827, "MD": 8496, "CT": 0, "AE": 0, "EC": 0, "OT": 220, "TOTAL": 51543}, "mensal": {"SE": 42827, "MD": 8496, "CT": 0, "AE": 0, "EC": 0, "OT": 220, "TOTAL": 51543}}, "2026-04": {"acum": {"SE": 90006, "MD": 23508, "CT": 0, "AE": 0, "EC": 0, "OT": 12955, "TOTAL": 126469}, "mensal": {"SE": 47179, "MD": 15012, "CT": 0, "AE": 0, "EC": 0, "OT": 12735, "TOTAL": 74926}}, "2026-05": {"acum": {"SE": 145926, "MD": 38610, "CT": 5600, "AE": 0, "EC": 0, "OT": 13315, "TOTAL": 203451}, "mensal": {"SE": 55920, "MD": 15102, "CT": 5600, "AE": 0, "EC": 0, "OT": 360, "TOTAL": 76982}}, "2026-06": {"acum": {"SE": 164597, "MD": 46368, "CT": 5600, "AE": 0, "EC": 0, "OT": 13450, "TOTAL": 230015}, "mensal": {"SE": 18671, "MD": 7758, "CT": 0, "AE": 0, "EC": 0, "OT": 135, "TOTAL": 26564}}}, "Praia Grande": {"2026-03": {"acum": {"SE": 76537, "MD": 16704, "CT": 0, "AE": 0, "EC": 0, "OT": 10605, "TOTAL": 103846}, "mensal": {"SE": 76537, "MD": 16704, "CT": 0, "AE": 0, "EC": 0, "OT": 10605, "TOTAL": 103846}}, "2026-04": {"acum": {"SE": 197478, "MD": 39008, "CT": 0, "AE": 0, "EC": 0, "OT": 11300, "TOTAL": 247786}, "mensal": {"SE": 120941, "MD": 22304, "CT": 0, "AE": 0, "EC": 0, "OT": 695, "TOTAL": 143940}}, "2026-05": {"acum": {"SE": 322536, "MD": 63799, "CT": 0, "AE": 0, "EC": 0, "OT": 22410, "TOTAL": 408745}, "mensal": {"SE": 125059, "MD": 24791, "CT": 0, "AE": 0, "EC": 0, "OT": 11110, "TOTAL": 160960}}, "2026-06": {"acum": {"SE": 328360, "MD": 64654, "CT": 0, "AE": 0, "EC": 0, "OT": 22410, "TOTAL": 415424}, "mensal": {"SE": 5824, "MD": 855, "CT": 0, "AE": 0, "EC": 0, "OT": 0, "TOTAL": 6679}}}, "GSP": {"2026-03": {"acum": {"SE": 1253620, "MD": 170637, "CT": 74689, "AE": 0, "EC": 0, "OT": 52900, "TOTAL": 1551847}, "mensal": {"SE": 1253620, "MD": 170637, "CT": 74689, "AE": 0, "EC": 0, "OT": 52900, "TOTAL": 1551847}}, "2026-04": {"acum": {"SE": 2133309, "MD": 296092, "CT": 110375, "AE": 0, "EC": 0, "OT": 86972, "TOTAL": 2626748}, "mensal": {"SE": 879688, "MD": 125455, "CT": 35686, "AE": 0, "EC": 0, "OT": 34072, "TOTAL": 1074901}}, "2026-05": {"acum": {"SE": 3144789, "MD": 449905, "CT": 170551, "AE": 0, "EC": 0, "OT": 112084, "TOTAL": 3877330}, "mensal": {"SE": 1011480, "MD": 153813, "CT": 60176, "AE": 0, "EC": 0, "OT": 25112, "TOTAL": 1250581}}, "2026-06": {"acum": {"SE": 3268285, "MD": 471517, "CT": 193355, "AE": 0, "EC": 0, "OT": 126642, "TOTAL": 4059799}, "mensal": {"SE": 123496, "MD": 21612, "CT": 22804, "AE": 0, "EC": 0, "OT": 14558, "TOTAL": 182470}}}};
+const BREAKDOWN={"Santo Anjo": {"total_26": 80, "total_25": 74, "nivel_26": {"EF1": 14, "EF2": 7, "EI": 52, "EM": 7}, "nivel_25": {"EF1": 10, "EF2": 10, "EI": 37, "EM": 5}, "rec": {"SE": 1140442, "MD": 96129, "CT": 179061, "AE": 0, "EC": 0, "OT": 27796, "TOTAL": 1443428}}, "CCPA": {"total_26": 8, "total_25": 7, "nivel_26": {"EF1": 2, "EF2": 1, "EI": 2, "EM": 3}, "nivel_25": {"EF1": 2, "EF2": 3, "EM": 1}, "rec": {"SE": 123264, "MD": 10832, "CT": 8694, "AE": 0, "EC": 0, "OT": 620, "TOTAL": 143410}}, "CJA": {"total_26": 18, "total_25": 12, "nivel_26": {"EF1": 5, "EI": 13}, "nivel_25": {"EF1": 7, "EF2": 2, "EI": 3}, "rec": {"SE": 266488, "MD": 12100, "CT": 0, "AE": 0, "EC": 0, "OT": 16991, "TOTAL": 295579}}, "Marupiara": {"total_26": 11, "total_25": 8, "nivel_26": {"EF1": 2, "EF2": 2, "EI": 3, "EM": 4}, "nivel_25": {"EF1": 3, "EI": 1, "EM": 4}, "rec": {"SE": 170812, "MD": 9256, "CT": 0, "AE": 0, "EC": 0, "OT": 290, "TOTAL": 180357}}, "Aquarius": {"total_26": 10, "total_25": 18, "nivel_26": {"EF1": 3, "EF2": 1, "EM": 6}, "nivel_25": {"EF1": 2, "EF2": 2, "EI": 6, "EM": 7}, "rec": {"SE": 208161, "MD": 37953, "CT": 0, "AE": 0, "EC": 0, "OT": 11350, "TOTAL": 257463}}, "Conselheiro": {"total_26": 6, "total_25": 4, "nivel_26": {"EM": 6}, "nivel_25": {"EM": 4}, "rec": {"SE": 120713, "MD": 24079, "CT": 0, "AE": 0, "EC": 0, "OT": 4978, "TOTAL": 149770}}, "Embaré": {"total_26": 15, "total_25": 14, "nivel_26": {"EF1": 2, "EF2": 8, "EI": 5}, "nivel_25": {"EF1": 3, "EF2": 6, "EI": 4}, "rec": {"SE": 177628, "MD": 44469, "CT": 0, "AE": 0, "EC": 0, "OT": 6768, "TOTAL": 228865}}, "Guarujá": {"total_26": 16, "total_25": 9, "nivel_26": {"EF1": 6, "EF2": 4, "EI": 5, "EM": 1}, "nivel_25": {"EF1": 3, "EF2": 2, "EI": 1, "EM": 2}, "rec": {"SE": 201795, "MD": 53882, "CT": 0, "AE": 0, "EC": 0, "OT": 556, "TOTAL": 256232}}, "Ponta da Praia": {"total_26": 19, "total_25": 9, "nivel_26": {"EF1": 5, "EF2": 5, "EI": 5, "EM": 4}, "nivel_25": {"EF1": 2, "EI": 4, "EM": 2}, "rec": {"SE": 366025, "MD": 71796, "CT": 0, "AE": 0, "EC": 0, "OT": 21433, "TOTAL": 459254}}, "São Vicente": {"total_26": 19, "total_25": 11, "nivel_26": {"EF1": 3, "EF2": 3, "EI": 13}, "nivel_25": {"EF1": 5, "EF2": 2, "EI": 2}, "rec": {"SE": 164597, "MD": 46368, "CT": 5600, "AE": 0, "EC": 0, "OT": 13450, "TOTAL": 230015}}, "Praia Grande": {"total_26": 26, "total_25": 15, "nivel_26": {"EF1": 4, "EF2": 5, "EI": 15, "EM": 2}, "nivel_25": {"EF1": 2, "EF2": 2, "EI": 10, "EM": 1}, "rec": {"SE": 328360, "MD": 64654, "CT": 0, "AE": 0, "EC": 0, "OT": 22410, "TOTAL": 415424}}, "GSP": {"total_26": 228, "total_25": 181, "nivel_26": {"EF1": 46, "EF2": 36, "EI": 113, "EM": 33}, "nivel_25": {"EF1": 39, "EF2": 29, "EI": 68, "EM": 26}, "rec": {"SE": 3268285, "MD": 471517, "CT": 193355, "AE": 0, "EC": 0, "OT": 126642, "TOTAL": 4059799}}};
+const METAS={"GSP": {"mensal": {"2026-03": 68, "2026-04": 74, "2026-05": 58, "2026-06": 78, "2026-07": 199, "2026-08": 141, "2026-09": 29, "2026-10": 18, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 68, "2026-04": 142, "2026-05": 200, "2026-06": 278, "2026-07": 477, "2026-08": 618, "2026-09": 647, "2026-10": 665, "2026-11": 665, "2026-12": 665}, "meta_total": 679}, "Santo Anjo": {"mensal": {"2026-03": 32, "2026-04": 24, "2026-05": 21, "2026-06": 32, "2026-07": 50, "2026-08": 46, "2026-09": 29, "2026-10": 18, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 32, "2026-04": 56, "2026-05": 77, "2026-06": 109, "2026-07": 159, "2026-08": 205, "2026-09": 234, "2026-10": 252, "2026-11": 252, "2026-12": 252}, "meta_total": 252}, "CCPA": {"mensal": {"2026-03": 3, "2026-04": 4, "2026-05": 0, "2026-06": 11, "2026-07": 11, "2026-08": 15, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 3, "2026-04": 7, "2026-05": 7, "2026-06": 18, "2026-07": 29, "2026-08": 44, "2026-09": 44, "2026-10": 44, "2026-11": 44, "2026-12": 44}, "meta_total": 44}, "Praia Grande": {"mensal": {"2026-03": 7, "2026-04": 10, "2026-05": 4, "2026-06": 4, "2026-07": 30, "2026-08": 11, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 7, "2026-04": 17, "2026-05": 21, "2026-06": 25, "2026-07": 55, "2026-08": 66, "2026-09": 66, "2026-10": 66, "2026-11": 66, "2026-12": 66}, "meta_total": 67}, "São Vicente": {"mensal": {"2026-03": 5, "2026-04": 4, "2026-05": 4, "2026-06": 4, "2026-07": 11, "2026-08": 8, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 5, "2026-04": 9, "2026-05": 13, "2026-06": 17, "2026-07": 28, "2026-08": 36, "2026-09": 36, "2026-10": 36, "2026-11": 36, "2026-12": 36}, "meta_total": 36}, "CJA": {"mensal": {"2026-03": 8, "2026-04": 2, "2026-05": 3, "2026-06": 10, "2026-07": 10, "2026-08": 6, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 8, "2026-04": 10, "2026-05": 13, "2026-06": 23, "2026-07": 33, "2026-08": 39, "2026-09": 39, "2026-10": 39, "2026-11": 39, "2026-12": 39}, "meta_total": 38}, "Marupiara": {"mensal": {"2026-03": 3, "2026-04": 4, "2026-05": 3, "2026-06": 3, "2026-07": 14, "2026-08": 9, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 3, "2026-04": 7, "2026-05": 10, "2026-06": 13, "2026-07": 27, "2026-08": 36, "2026-09": 36, "2026-10": 36, "2026-11": 36, "2026-12": 36}, "meta_total": 36}, "Aquarius": {"mensal": {"2026-03": 1, "2026-04": 7, "2026-05": 8, "2026-06": 9, "2026-07": 15, "2026-08": 10, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 1, "2026-04": 8, "2026-05": 16, "2026-06": 25, "2026-07": 40, "2026-08": 50, "2026-09": 50, "2026-10": 50, "2026-11": 50, "2026-12": 50}, "meta_total": 50}, "Embaré": {"mensal": {"2026-03": 5, "2026-04": 5, "2026-05": 4, "2026-06": 1, "2026-07": 21, "2026-08": 10, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 5, "2026-04": 10, "2026-05": 14, "2026-06": 15, "2026-07": 36, "2026-08": 46, "2026-09": 46, "2026-10": 46, "2026-11": 46, "2026-12": 46}, "meta_total": 47}, "Ponta da Praia": {"mensal": {"2026-03": 11, "2026-04": 4, "2026-05": 3, "2026-06": 1, "2026-07": 22, "2026-08": 12, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 11, "2026-04": 15, "2026-05": 18, "2026-06": 19, "2026-07": 41, "2026-08": 53, "2026-09": 53, "2026-10": 53, "2026-11": 53, "2026-12": 53}, "meta_total": 53}, "Conselheiro": {"mensal": {"2026-03": 2, "2026-04": 1, "2026-05": 2, "2026-06": 0, "2026-07": 12, "2026-08": 7, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 2, "2026-04": 3, "2026-05": 5, "2026-06": 5, "2026-07": 17, "2026-08": 24, "2026-09": 24, "2026-10": 24, "2026-11": 24, "2026-12": 24}, "meta_total": 24}, "Guarujá": {"mensal": {"2026-03": 8, "2026-04": 6, "2026-05": 5, "2026-06": 2, "2026-07": 4, "2026-08": 7, "2026-09": 0, "2026-10": 0, "2026-11": 0, "2026-12": 0}, "acum": {"2026-03": 8, "2026-04": 14, "2026-05": 19, "2026-06": 21, "2026-07": 25, "2026-08": 32, "2026-09": 32, "2026-10": 32, "2026-11": 32, "2026-12": 32}, "meta_total": 33}};
+
+function fmtM(v){const a=Math.abs(v);const s=v<0?'\u2212':'';return s+'R$ '+(a>=1e6?(a/1e6).toFixed(1)+'M':(a>=1e3?(a/1e3).toFixed(0)+'K':a));}
+function fmtN(v){return v.toLocaleString('pt-BR');}
+function yoyPct(v26,v25){if(!v25)return null;return Math.round((v26-v25)/v25*100);}
+function btnStyle(active){
+  return active
+    ? `background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);border-radius:6px;color:var(--amber);font-family:'DM Sans',sans-serif;font-size:12px;padding:4px 10px;cursor:pointer;`
+    : `background:none;border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;padding:4px 10px;cursor:pointer;`;
+}
+function semaforoColor(pct){
+  if(pct>=100) return 'var(--green)';
+  if(pct>=80)  return 'var(--amber)';
+  return 'var(--red)';
+}
+function semaforoBg(pct){
+  if(pct>=100) return 'rgba(52,211,153,.12)';
+  if(pct>=80)  return 'rgba(251,191,36,.12)';
+  return 'rgba(248,113,113,.12)';
+}
+function pctAtingido(real, meta){
+  if(!meta) return null;
+  return Math.round(real/meta*100);
+}
+function progressBar(real, meta, height='6px'){
+  if(!meta) return '';
+  const pct = Math.min(Math.round(real/meta*100), 100);
+  const clr = semaforoColor(Math.round(real/meta*100));
+  return `<div style="background:rgba(255,255,255,.06);border-radius:3px;height:${height};width:100%;margin-top:5px">
+    <div style="width:${pct}%;background:${clr};height:${height};border-radius:3px;transition:width .5s ease"></div>
+  </div>`;
+}
+
+// ── GSP ──────────────────────────────────────────────
+let _chartAcumGSP=null, _chartMensalGSP=null, _chartRecGSP=null, _chartNivelGSP=null, _chartMetaGSP=null;
+let _mesFiltroGSP='2026-06', _prodFiltroGSP='TOTAL';
+
+function buildGSP(){
+  const fmEl=document.getElementById('filtroMesGSP');
+  MESES26.forEach((m,i)=>{
+    const b=document.createElement('button');
+    b.textContent=MESES26_LBL[m]; b.style.cssText=btnStyle(m===_mesFiltroGSP);
+    b.onclick=()=>{_mesFiltroGSP=m;fmEl.querySelectorAll('button').forEach((btn,j)=>btn.style.cssText=btnStyle(j===i));renderAcumGSP();};
+    fmEl.appendChild(b);
+  });
+  const fpEl=document.getElementById('filtroProdGSP');
+  const prods=['TOTAL','SE','MD','CT','OT'];
+  prods.forEach((p)=>{
+    const b=document.createElement('button');
+    b.className='fbtn'+(p===_prodFiltroGSP?' active':'');
+    b.textContent=SRV_LBL[p];
+    b.onclick=()=>{_prodFiltroGSP=p;fpEl.querySelectorAll('.fbtn').forEach(btn=>btn.classList.remove('active'));b.classList.add('active');renderRecGSP();};
+    fpEl.appendChild(b);
+  });
+
+  renderAcumGSP();
+  renderMensalGSP();
+  renderRecGSP();
+  renderNivelGSP();
+  buildRankingGSP();
+  buildMetaChartGSP();
+}
+
+function renderAcumGSP(){
+  const mesFim=_mesFiltroGSP;
+  const mesesV=MESES26.slice(0,MESES26.indexOf(mesFim)+1);
+  const v26=mesesV.map(m=>AL26.GSP[m]?.acum||0);
+  const v25eq=mesesV.map(m=>{
+    const m25='2025-'+m.split('-')[1];
+    return AL25.GSP[m25]?.acum||0;
+  });
+  const cur26=AL26.GSP[mesFim]?.acum||0;
+  const curM25='2025-'+mesFim.split('-')[1];
+  const cur25=AL25.GSP[curM25]?.acum||0;
+  const pct=yoyPct(cur26,cur25);
+  document.getElementById('metricsAcumGSP').innerHTML=`
+    <div class="metric ml-amber" style="margin:0"><div class="metric-label">Acumulado 2026</div><div class="metric-value">${fmtN(cur26)}</div><div class="metric-sub neu">até ${MESES26_LBL[mesFim]}</div></div>
+    <div class="metric ml-teal" style="margin:0"><div class="metric-label">Equivalente 2025</div><div class="metric-value">${fmtN(cur25)}</div><div class="metric-sub neu">mesmo período</div></div>
+    <div class="metric ${pct!==null&&pct>=0?'ml-green':'ml-red'}" style="margin:0"><div class="metric-label">Variação YoY</div><div class="metric-value" style="color:${pct!==null&&pct>=0?'var(--green)':'var(--red)'}">${pct!==null?(pct>=0?'+':'')+pct+'%':'\u2014'}</div><div class="metric-sub neu">${cur26-cur25>=0?'+':''}${fmtN(cur26-cur25)} alunos</div></div>`;
+
+  const vMeta=mesesV.map(m=>METAS.GSP?.acum[m]||null);
+
+  if(_chartAcumGSP)_chartAcumGSP.destroy();
+  _chartAcumGSP=new Chart(document.getElementById('chartAcumGSP'),{
+    data:{labels:mesesV.map(m=>MESES26_LBL[m]),datasets:[
+      {type:'bar',label:'2026',data:v26,backgroundColor:'rgba(251,191,36,.7)',borderRadius:5,borderWidth:0,order:3},
+      {type:'bar',label:'2025 (mesmo mês)',data:v25eq,backgroundColor:'rgba(255,255,255,.12)',borderRadius:5,borderWidth:0,order:3},
+      {type:'line',label:'2026 linha',data:v26,borderColor:'#fbbf24',backgroundColor:'transparent',pointRadius:5,borderWidth:2.5,order:2},
+      {type:'line',label:'2025 linha',data:v25eq,borderColor:'rgba(255,255,255,.35)',backgroundColor:'transparent',pointRadius:4,borderWidth:1.5,borderDash:[4,3],order:2},
+      {type:'line',label:'Meta',data:vMeta,borderColor:'rgba(248,113,113,.8)',backgroundColor:'transparent',borderDash:[6,4],pointRadius:3,borderWidth:2,order:1,pointBackgroundColor:'rgba(248,113,113,.8)'},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#8890a8',font:{size:11},boxWidth:10,padding:12,filter:i=>!i.text.includes('linha')}},
+        tooltip:{...CDO,callbacks:{label:c=>` ${c.dataset.label?.replace(' linha','')}: ${fmtN(c.parsed.y)}`}}},
+      scales:{x:{ticks:{color:TC,font:{size:12}},grid:{color:GC}},y:{ticks:{color:TC,font:{size:11}},grid:{color:GC}}}}
+  });
+}
+
+function renderMensalGSP(){
+  const labels26=MESES26.map(m=>MESES26_LBL[m]);
+  const labels25=MESES25.map(m=>MESES25_LBL[m]);
+  const v26=MESES26.map(m=>AL26.GSP[m]?.mensal||0);
+  const v25=MESES25.map(m=>AL25.GSP[m]?.mensal||0);
+
+  if(_chartMensalGSP)_chartMensalGSP.destroy();
+  _chartMensalGSP=new Chart(document.getElementById('chartMensalGSP'),{
+    data:{labels:[...labels25,...labels26],datasets:[
+      {type:'bar',label:'2025',data:[...v25,...Array(labels26.length).fill(null)],backgroundColor:'rgba(255,255,255,.15)',borderRadius:4,borderWidth:0},
+      {type:'bar',label:'2026',data:[...Array(labels25.length).fill(null),...v26],backgroundColor:'rgba(251,191,36,.75)',borderRadius:4,borderWidth:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#8890a8',font:{size:11},boxWidth:10,padding:10}},
+        tooltip:{...CDO}},
+      scales:{x:{ticks:{color:TC,font:{size:10},maxRotation:35},grid:{color:GC}},y:{ticks:{color:TC,font:{size:11}},grid:{color:GC}}}}
+  });
+}
+
+function renderRecGSP(){
+  const p=_prodFiltroGSP;
+  const labels=MESES26.map(m=>MESES26_LBL[m]);
+  const acumVals=MESES26.map(m=>REC26.GSP[m]?.acum[p]||0);
+  const mensVals=MESES26.map(m=>REC26.GSP[m]?.mensal[p]||0);
+  if(_chartRecGSP)_chartRecGSP.destroy();
+  _chartRecGSP=new Chart(document.getElementById('chartRecGSP'),{
+    data:{labels,datasets:[
+      {type:'bar',label:'Mensal',data:mensVals,backgroundColor:SRV_CLR[p]+'99',borderRadius:4,borderWidth:0,order:2},
+      {type:'line',label:'Acumulado',data:acumVals,borderColor:SRV_CLR[p],backgroundColor:SRV_CLR[p]+'18',fill:true,tension:.35,pointRadius:4,borderWidth:2.5,order:1},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#8890a8',font:{size:11},boxWidth:10,padding:8}},
+        tooltip:{...CDO,callbacks:{label:c=>` ${c.dataset.label}: ${fmtM(c.parsed.y)}`}}},
+      scales:{x:{ticks:{color:TC,font:{size:11}},grid:{color:GC}},y:{ticks:{color:TC,font:{size:11},callback:v=>fmtM(v)},grid:{color:GC}}}}
+  });
+}
+
+function renderNivelGSP(){
+  const n26=BREAKDOWN.GSP.nivel_26, n25=BREAKDOWN.GSP.nivel_25;
+  const niveis=['EI','EF1','EF2','EM'];
+  const v26=niveis.map(n=>n26[n]||0), v25=niveis.map(n=>n25[n]||0);
+  if(_chartNivelGSP)_chartNivelGSP.destroy();
+  _chartNivelGSP=new Chart(document.getElementById('chartNivelGSP'),{
+    type:'bar',
+    data:{labels:niveis,datasets:[
+      {label:'2026',data:v26,backgroundColor:niveis.map(n=>NIVEL_CLR[n]),borderRadius:5,borderWidth:0},
+      {label:'2025',data:v25,backgroundColor:niveis.map(n=>NIVEL_CLR[n]+'44'),borderRadius:5,borderWidth:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#8890a8',font:{size:11},boxWidth:10,padding:8}},
+        tooltip:{...CDO}},
+      scales:{x:{ticks:{color:TC,font:{size:12}},grid:{color:GC}},y:{ticks:{color:TC,font:{size:11}},grid:{color:GC}}}}
+  });
+}
+
+function buildRankingGSP(){
+  const rows=ESCOLAS.map(nome=>{
+    const b=BREAKDOWN[nome];
+    if(!b)return'';
+    const pct=yoyPct(b.total_26,b.total_25);
+    const tc=pct!==null&&pct>=0?'var(--green)':'var(--red)';
+    const metaAcum = METAS[nome]?.acum['2026-06']||0;
+    const pctMeta = pctAtingido(b.total_26, metaAcum);
+    return `<tr>
+      <td style="cursor:pointer;color:var(--amber);font-weight:500" onclick="showEscola('${nome}')">${nome}</td>
+      <td class="num">${b.total_26}</td>
+      <td class="num">${b.total_25}</td>
+      <td class="num" style="color:${tc}">${pct!==null?(pct>=0?'+':'')+pct+'%':'\u2014'}</td>
+      <td class="num">${b.total_26-b.total_25>=0?'+':''}${b.total_26-b.total_25}</td>
+      <td class="num">${fmtM(b.rec.TOTAL)}</td>
+      <td class="num">${fmtM(b.rec.SE)}</td>
+      <td class="num">${b.total_26>0?fmtM(Math.round(b.rec.TOTAL/b.total_26/6)):'\u2014'}</td>
+      <td class="num">${b.total_26>0?fmtM(Math.round(b.rec.SE/b.total_26/6)):'\u2014'}</td>
+      <td class="num">${metaAcum||'\u2014'}</td>
+      <td class="num" style="color:${semaforoColor(pctMeta)}">${pctMeta!==null?pctMeta+'%':'\u2014'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('rankTableGSP').innerHTML=`
+    <thead><tr><th>Escola</th><th>2026</th><th>2025</th><th>YoY</th><th>Δ Alunos</th><th>Rec. Total</th><th>Rec. SE</th><th>Ticket Médio</th><th>Mensalidade Méd.</th><th>Meta Acum. Jun</th><th>% Meta</th></tr></thead>
+    <tbody>${rows}</tbody>`;
+}
+
+function buildMetaChartGSP() {
+  const labels = MESES26.map(m => MESES26_LBL[m]);
+  const real   = MESES26.map(m => AL26.GSP[m]?.acum || 0);
+  const meta   = MESES26.map(m => METAS.GSP?.acum[m] || 0);
+  const ultimo = real[real.length-1];
+  const metaUlt= meta[meta.length-1];
+  const pct    = pctAtingido(ultimo, metaUlt);
+
+  document.getElementById('metricsMetaGSP').innerHTML = `
+    <div class="metric ml-amber" style="margin:0">
+      <div class="metric-label">Realizado Acum.</div>
+      <div class="metric-value">${fmtN(ultimo)}</div>
+      <div class="metric-sub neu">at\u00e9 ${MESES26_LBL[MESES26[MESES26.length-1]]}</div>
+    </div>
+    <div class="metric ml-teal" style="margin:0">
+      <div class="metric-label">Meta Acum.</div>
+      <div class="metric-value">${fmtN(metaUlt)}</div>
+      <div class="metric-sub neu">acum. previsto</div>
+    </div>
+    <div class="metric" style="margin:0;border-left:3px solid ${semaforoColor(pct)};background:${semaforoBg(pct)}">
+      <div class="metric-label">% Atingido</div>
+      <div class="metric-value" style="color:${semaforoColor(pct)}">${pct}%</div>
+      <div class="metric-sub neu">${ultimo >= metaUlt ? '\u2705 acima da meta' : fmtN(metaUlt - ultimo) + ' abaixo'}</div>
+      ${progressBar(ultimo, metaUlt)}
+    </div>
+    <div class="metric ml-accent" style="margin:0">
+      <div class="metric-label">Meta Anual</div>
+      <div class="metric-value">${fmtN(METAS.GSP?.meta_total || 0)}</div>
+      <div class="metric-sub neu">${pctAtingido(ultimo, METAS.GSP?.meta_total)}% atingido</div>
+      ${progressBar(ultimo, METAS.GSP?.meta_total)}
+    </div>`;
+
+  if (_chartMetaGSP) _chartMetaGSP.destroy();
+  _chartMetaGSP = new Chart(document.getElementById('chartMetaGSP'), {
+    data: {
+      labels,
+      datasets: [
+        { type:'bar', label:'Realizado', data:real,
+          backgroundColor: real.map((v,i) => v >= meta[i] ? 'rgba(52,211,153,.75)' : 'rgba(251,191,36,.75)'),
+          borderRadius:5, borderWidth:0, order:2 },
+        { type:'line', label:'Meta', data:meta,
+          borderColor:'rgba(255,255,255,.55)', backgroundColor:'transparent',
+          borderDash:[5,4], pointRadius:4, borderWidth:2, order:1,
+          pointBackgroundColor:'rgba(255,255,255,.55)' },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend:{display:false},
+        tooltip:{...CDO, callbacks:{label:c=>` ${c.dataset.label}: ${fmtN(c.parsed.y)}`}}
+      },
+      scales:{
+        x:{ticks:{color:TC,font:{size:12}},grid:{color:GC}},
+        y:{ticks:{color:TC,font:{size:11}},grid:{color:GC},beginAtZero:true}
+      }
+    }
+  });
+}
+
+function buildMetaChartEscola(nome, uid) {
+  const labels = MESES26.map(m => MESES26_LBL[m]);
+  const real   = MESES26.map(m => AL26[nome]?.[m]?.acum || 0);
+  const meta   = MESES26.map(m => METAS[nome]?.acum[m] || 0);
+  if (!meta.some(v => v > 0)) return;
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'margin-top:14px';
+  wrapper.innerHTML = `
+    <p class="section-title" style="margin-top:0">Realizado vs Meta — acumulado</p>
+    <div class="card">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px;" id="metricsMetaE_${uid}"></div>
+      <div style="position:relative;height:200px"><canvas id="chartMetaE_${uid}"></canvas></div>
+    </div>`;
+
+  document.getElementById('escolaContent').appendChild(wrapper);
+
+  const ultimo  = real[real.length-1];
+  const metaUlt = meta[meta.length-1];
+  const pct     = pctAtingido(ultimo, metaUlt);
+  const pctAnual= pctAtingido(ultimo, METAS[nome]?.meta_total);
+
+  document.getElementById(`metricsMetaE_${uid}`).innerHTML = `
+    <div class="metric ml-amber" style="margin:0">
+      <div class="metric-label">Realizado</div>
+      <div class="metric-value">${fmtN(ultimo)}</div>
+      <div class="metric-sub neu">acum. Jun/26</div>
+    </div>
+    <div class="metric ml-teal" style="margin:0">
+      <div class="metric-label">Meta Acum.</div>
+      <div class="metric-value">${fmtN(metaUlt)}</div>
+      <div class="metric-sub neu">previsto Jun/26</div>
+    </div>
+    <div class="metric" style="margin:0;border-left:3px solid ${semaforoColor(pct)};background:${semaforoBg(pct)}">
+      <div class="metric-label">% Atingido</div>
+      <div class="metric-value" style="color:${semaforoColor(pct)}">${pct !== null ? pct+'%' : '\u2014'}</div>
+      <div class="metric-sub neu">${ultimo >= metaUlt ? '\u2705 acima' : fmtN(metaUlt - ultimo) + ' abaixo'}</div>
+      ${progressBar(ultimo, metaUlt)}
+    </div>
+    <div class="metric" style="margin:0;border-left:3px solid var(--text3)">
+      <div class="metric-label">Meta Anual</div>
+      <div class="metric-value">${fmtN(METAS[nome]?.meta_total || 0)}</div>
+      <div class="metric-sub neu">${pctAnual !== null ? pctAnual+'% atingido' : '\u2014'}</div>
+      ${progressBar(ultimo, METAS[nome]?.meta_total)}
+    </div>`;
+
+  new Chart(document.getElementById(`chartMetaE_${uid}`), {
+    data: {
+      labels,
+      datasets: [
+        { type:'bar', label:'Realizado', data:real,
+          backgroundColor: real.map((v,i) => v >= meta[i] ? 'rgba(52,211,153,.75)' : 'rgba(251,191,36,.75)'),
+          borderRadius:4, borderWidth:0, order:2 },
+        { type:'line', label:'Meta', data:meta,
+          borderColor:'rgba(255,255,255,.55)', backgroundColor:'transparent',
+          borderDash:[5,4], pointRadius:3, borderWidth:2, order:1,
+          pointBackgroundColor:'rgba(255,255,255,.55)' },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...CDO,callbacks:{label:c=>` ${c.dataset.label}: ${fmtN(c.parsed.y)}`}}},
+      scales:{x:{ticks:{color:TC,font:{size:11}},grid:{color:GC}},y:{ticks:{color:TC,font:{size:11}},grid:{color:GC},beginAtZero:true}}
+    }
+  });
+}
+
+// ── ESCOLA ──────────────────────────────────────────────
+function buildEscolaPage(nome){
+  const b=BREAKDOWN[nome]; if(!b)return;
+  const uid=nome.replace(/[^a-zA-Z0-9]/g,'_');
+  const pct=yoyPct(b.total_26,b.total_25);
+  const tColor=pct!==null&&pct>=0?'var(--green)':'var(--red)';
+  const n26=b.nivel_26, n25=b.nivel_25;
+  const niveis=['EI','EF1','EF2','EM'].filter(n=>(n26[n]||0)+(n25[n]||0)>0);
+  const maxN=Math.max(...niveis.map(n=>Math.max(n26[n]||0,n25[n]||0)),1);
+  const nivelBars=niveis.map(n=>`
+    <div class="nivel-row">
+      <span class="nivel-label">${n}</span>
+      <div style="flex:1">
+        <div style="display:flex;gap:4px;margin-bottom:3px">
+          <div class="nivel-bar-bg" style="flex:1"><div class="nivel-bar-fill" style="width:${Math.round((n26[n]||0)/maxN*100)}%;background:${NIVEL_CLR[n]}"></div></div>
+          <span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--amber);min-width:24px;text-align:right">${n26[n]||0}</span>
+        </div>
+        <div style="display:flex;gap:4px">
+          <div class="nivel-bar-bg" style="flex:1"><div class="nivel-bar-fill" style="width:${Math.round((n25[n]||0)/maxN*100)}%;background:${NIVEL_CLR[n]}44"></div></div>
+          <span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);min-width:24px;text-align:right">${n25[n]||0}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  const v26=MESES26.map(m=>AL26[nome]?.[m]?.acum||0);
+  const v25eq=MESES26.map(m=>{const m25='2025-'+m.split('-')[1];return AL25[nome]?.[m25]?.acum||0;});
+  const v26m=MESES26.map(m=>AL26[nome]?.[m]?.mensal||0);
+  const v25m=MESES25.map(m=>AL25[nome]?.[m]?.mensal||0);
+  const recAcum=MESES26.map(m=>REC26[nome]?.[m]?.acum?.TOTAL||0);
+  const recMens=MESES26.map(m=>REC26[nome]?.[m]?.mensal?.TOTAL||0);
+
+  let insights=[];
+  if(pct!==null&&pct>=0) insights.push(`<div class="insight good"><strong>\u2705 YoY positivo:</strong> ${b.total_26} captações vs ${b.total_25} em 2025 (${pct>=0?'+':''}${pct}%). Destaque no ciclo de inverno.</div>`);
+  else if(pct!==null) insights.push(`<div class="insight warn"><strong>\u26a0 Queda YoY:</strong> ${b.total_26} captações vs ${b.total_25} em 2025 (${pct}%). Avaliar causas.</div>`);
+  const ticketMedio = b.total_26>0?Math.round(b.rec.TOTAL/b.total_26/6):0;
+  const mensalMedia = b.total_26>0?Math.round(b.rec.SE/b.total_26/6):0;
+  if(ticketMedio>0) insights.push(`<div class="insight" style="margin-top:8px"><strong>\ud83d\udcb0 Ticket m\u00e9dio:</strong> ${fmtM(ticketMedio)}/m\u00eas \u00b7 Mensalidade m\u00e9dia SE: ${fmtM(mensalMedia)}/m\u00eas \u00b7 Receita total: ${fmtM(b.rec.TOTAL)}.</div>`);
+
+  document.getElementById('escolaContent').innerHTML=`
+    <button class="back-btn" onclick="showPage('gsp')">\u2190 Voltar ao GSP</button>
+    <div class="page-header"><h1>${nome} <span class="badge">Ciclo Inverno 2026</span></h1><p>Apenas Matrículas Novas a partir de 01/03/2026 \u00b7 Bolsistas 100% exclu\u00eddos</p></div>
+    <div class="metrics">
+      <div class="metric ml-amber"><div class="metric-label">Captação 2026</div><div class="metric-value">${b.total_26}</div><div class="metric-sub neu">matrículas novas</div></div>
+      <div class="metric ml-teal"><div class="metric-label">Captação 2025</div><div class="metric-value">${b.total_25}</div><div class="metric-sub neu">ciclo inverno YoY</div></div>
+      <div class="metric ${pct!==null&&pct>=0?'ml-green':'ml-red'}"><div class="metric-label">Variação YoY</div><div class="metric-value" style="color:${tColor}">${pct!==null?(pct>=0?'+':'')+pct+'%':'\u2014'}</div><div class="metric-sub neu">${b.total_26-b.total_25>=0?'+':''}${b.total_26-b.total_25} alunos</div></div>
+      <div class="metric ml-accent"><div class="metric-label">Receita Total</div><div class="metric-value">${fmtM(b.rec.TOTAL)}</div><div class="metric-sub neu">acum. Jun/26</div></div>
+      <div class="metric ml-accent"><div class="metric-label">Receita SE</div><div class="metric-value">${fmtM(b.rec.SE)}</div><div class="metric-sub neu">${b.rec.TOTAL>0?Math.round(b.rec.SE/b.rec.TOTAL*100):0}% da receita</div></div>
+      <div class="metric ml-green"><div class="metric-label">Ticket Médio</div><div class="metric-value">${b.total_26>0?fmtM(Math.round(b.rec.TOTAL/b.total_26/6)):'\u2014'}</div><div class="metric-sub neu">rec. total / alunos / 6</div></div>
+      <div class="metric ml-teal"><div class="metric-label">Mensalidade Média</div><div class="metric-value">${b.total_26>0?fmtM(Math.round(b.rec.SE/b.total_26/6)):'\u2014'}</div><div class="metric-sub neu">rec. SE / alunos / 6</div></div>
+      <div class="metric ml-amber"><div class="metric-label">Meta Acum. Jun</div><div class="metric-value">${METAS[nome]?.acum['2026-06']||'\u2014'}</div><div class="metric-sub neu">${(b.total_26>0&&METAS[nome]?.acum['2026-06'])?Math.round(b.total_26/METAS[nome].acum['2026-06']*100)+'% atingido':'\u2014'}</div></div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Captação acumulada — 2026 vs 2025</div>
+        <div style="position:relative;height:200px"><canvas id="chartAcumE_${uid}"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Captação mensal — 2026 vs 2025</div>
+        <div style="position:relative;height:200px"><canvas id="chartMensalE_${uid}"></canvas></div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Distribuição por segmento — 2026 (laranja) vs 2025 (cinza)</div>
+        ${nivelBars}
+        <div style="display:flex;gap:12px;margin-top:10px;font-size:11px;color:var(--text3)">
+          <span>\u25d3 2026</span><span style="opacity:.5">\u25d3 2025</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Receita acumulada (Total)</div>
+        <div style="position:relative;height:200px"><canvas id="chartRecE_${uid}"></canvas></div>
+      </div>
+    </div>
+    ${insights.join('')}`;
+
+  const vMetaE=MESES26.map(m=>METAS[nome]?.acum[m]||null);
+  new Chart(document.getElementById(`chartAcumE_${uid}`),{
+    data:{labels:MESES26.map(m=>MESES26_LBL[m]),datasets:[
+      {type:'bar',label:'2026',data:v26,backgroundColor:'rgba(251,191,36,.7)',borderRadius:4,borderWidth:0,order:3},
+      {type:'bar',label:'2025 (eq.)',data:v25eq,backgroundColor:'rgba(255,255,255,.12)',borderRadius:4,borderWidth:0,order:3},
+      {type:'line',label:'2026 linha',data:v26,borderColor:'#fbbf24',backgroundColor:'transparent',pointRadius:4,borderWidth:2,order:2},
+      {type:'line',label:'2025 linha',data:v25eq,borderColor:'rgba(255,255,255,.3)',backgroundColor:'transparent',pointRadius:3,borderWidth:1.5,borderDash:[4,3],order:2},
+      {type:'line',label:'Meta',data:vMetaE,borderColor:'rgba(248,113,113,.8)',backgroundColor:'transparent',borderDash:[6,4],pointRadius:3,borderWidth:2,order:1,pointBackgroundColor:'rgba(248,113,113,.8)'},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#8890a8',font:{size:10},boxWidth:9,padding:8,filter:i=>!i.text.includes('linha')}},
+        tooltip:{...CDO}},
+      scales:{x:{ticks:{color:TC,font:{size:11}},grid:{color:GC}},y:{ticks:{color:TC,font:{size:10}},grid:{color:GC}}}}
+  });
+
+  const labels25a=MESES25.map(m=>MESES25_LBL[m]);
+  const labels26a=MESES26.map(m=>MESES26_LBL[m]);
+  new Chart(document.getElementById(`chartMensalE_${uid}`),{
+    data:{labels:[...labels25a,...labels26a],datasets:[
+      {type:'bar',label:'2025',data:[...v25m,...Array(4).fill(null)],backgroundColor:'rgba(255,255,255,.15)',borderRadius:3,borderWidth:0},
+      {type:'bar',label:'2026',data:[...Array(4).fill(null),...v26m],backgroundColor:'rgba(251,191,36,.75)',borderRadius:3,borderWidth:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...CDO}},
+      scales:{x:{ticks:{color:TC,font:{size:9},maxRotation:35},grid:{color:GC}},y:{ticks:{color:TC,font:{size:10}},grid:{color:GC}}}}
+  });
+
+  new Chart(document.getElementById(`chartRecE_${uid}`),{
+    data:{labels:MESES26.map(m=>MESES26_LBL[m]),datasets:[
+      {type:'bar',label:'Mensal',data:recMens,backgroundColor:'rgba(79,142,247,.6)',borderRadius:4,borderWidth:0,order:2},
+      {type:'line',label:'Acumulado',data:recAcum,borderColor:'#4f8ef7',backgroundColor:'rgba(79,142,247,.1)',fill:true,tension:.35,pointRadius:4,borderWidth:2,order:1},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...CDO,callbacks:{label:c=>` ${c.dataset.label}: ${fmtM(c.parsed.y)}`}}},
+      scales:{x:{ticks:{color:TC,font:{size:11}},grid:{color:GC}},y:{ticks:{color:TC,font:{size:10},callback:v=>fmtM(v)},grid:{color:GC}}}}
+  });
+
+  setTimeout(()=>buildMetaChartEscola(nome, uid), 100);
+}
+
+// ── NAV ──────────────────────────────────────────────────
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(id==='gsp') document.querySelector('.nav-btn').classList.add('active');
+  window.scrollTo(0,0);
+}
+function showEscola(nome){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-escola').classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.toggle('active',b.textContent.trim()===nome);});
+  document.getElementById('escolaContent').innerHTML='';
+  buildEscolaPage(nome);
+  window.scrollTo(0,0);
+}
+
+buildGSP();
+</script>
+</body>
+</html>
